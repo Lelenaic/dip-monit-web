@@ -1,0 +1,6 @@
+database:
+  type: sqlite #Available : sqlite | mysql
+  host: localhost #Only for MySQL
+  database: dip #Only for MySQL
+  user: root #Only for MySQL
+  pass: #Only for MySQL

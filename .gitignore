@@ -1,3 +1,6 @@
+files/database.sqlite
+files/settings.yaml
+files/LOCK
 .idea/
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template
