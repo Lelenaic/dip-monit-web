@@ -13,7 +13,7 @@ def hello_world():
 def create():
     s = mom.Server(ip='127.0.0.1')
     s.save()
-    return ''
+    return s.installKey
 
 
 @app.route('/api/register')
