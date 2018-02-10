@@ -21,7 +21,11 @@ def register():
     key = request.args.get('key')
     if key is not None:
         s = mom.Server.get(mom.Server.installKey == key)
-        return s.apiKey
+        if s.ip == request.remote_addr and s.installed is False:
+            s.installed = True
+            s.save()
+            return s.apiKey
+    return ''
 
 
 if __name__ == '__main__':
