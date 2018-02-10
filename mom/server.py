@@ -6,7 +6,7 @@ from utils import Utils
 class Server(BaseModel):
     ip = CharField()
     installKey = CharField(max_length=12)
-    apiKey = CharField(max_length=64)
+    apiKey = CharField(max_length=128)
 
     def __init__(self, *args, **kwargs):
         super(Server, self).__init__(*args, **kwargs)
@@ -15,7 +15,7 @@ class Server(BaseModel):
 
     def _generate_api_key(self):
         if self.apiKey is None:
-            self.apiKey = Utils.generate_random_string(64)
+            self.apiKey = Utils.generate_random_string(128)
 
     def _generate_install_key(self):
         if self.installKey is None:
