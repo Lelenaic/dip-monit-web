@@ -11,7 +11,7 @@ def hello_world():
 
 @app.route('/create')
 def create():
-    s = mom.Server(ip='46.105.145.239')
+    s = mom.Server(ip='127.0.0.1')
     s.save()
     return s.installKey
 
@@ -20,8 +20,9 @@ def create():
 def register():
     key = request.args.get('key')
     if key is not None:
+        ip = request.headers['X-Forwarded-For']
         s = mom.Server.get(mom.Server.installKey == key)
-        if s.ip == request.remote_addr and s.installed is False:
+        if s.ip == ip and s.installed is False:
             s.installed = True
             s.save()
             return s.apiKey
