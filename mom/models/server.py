@@ -1,4 +1,4 @@
-from basemodel import BaseModel
+from mom.basemodel import BaseModel
 from peewee import *
 from mom.utils import Utils
 

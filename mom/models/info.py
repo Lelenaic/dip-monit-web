@@ -1,4 +1,4 @@
-from basemodel import BaseModel
+from mom.basemodel import BaseModel
 from peewee import *
 from server import Server
 import time
