@@ -1,0 +1,19 @@
+[Unit]
+Description=Mom internal webserver
+After=network-online.target
+
+[Service]
+Type=simple
+
+User=mom
+Group=mom
+UMask=007
+
+ExecStart=/var/mom/venv/bin/python2 /var/mom/main.py
+
+Restart=on-failure
+
+TimeoutStopSec=300
+
+[Install]
+WantedBy=multi-user.target
