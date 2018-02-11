@@ -11,7 +11,7 @@ def hello_world():
 
 @app.route('/create')
 def create():
-    s = mom.Server(ip='127.0.0.1')
+    s = mom.Server(ip='46.105.145.239')
     s.save()
     return s.installKey
 
