@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, abort
 import mom
 
 app = Flask(__name__)
@@ -21,12 +21,13 @@ def register():
     key = request.args.get('key')
     if key is not None:
         ip = mom.Utils.get_client_ip()
+        return ip
         s = mom.Server.get(mom.Server.installKey == key)
         if s.ip == ip and s.installed is False:
             s.installed = True
             s.save()
             return s.apiKey
-    return ''
+    abort(401)
 
 
 @app.route('/api/ping', methods=['POST'])
