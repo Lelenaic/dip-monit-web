@@ -1,4 +1,4 @@
-from mom.models.info import Info
+from mom.info import Info
 from mom.middlewares import AuthMiddleware
 from json import loads, dumps
 

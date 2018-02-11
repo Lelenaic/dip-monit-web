@@ -1,4 +1,4 @@
-from mom.models.server import Server
+from mom.server import Server
 from flask import abort
 from mom.utils import Utils
 
