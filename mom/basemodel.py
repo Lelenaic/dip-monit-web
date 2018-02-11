@@ -1,5 +1,5 @@
 from peewee import Model
-from mom.database import db
+from database import db
 
 
 class BaseModel(Model):

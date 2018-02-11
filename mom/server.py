@@ -1,6 +1,6 @@
-from mom.basemodel import BaseModel
+from basemodel import BaseModel
 from peewee import *
-from mom.utils import Utils
+from utils import Utils
 
 
 class Server(BaseModel):
