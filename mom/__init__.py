@@ -1,6 +1,6 @@
 from models.server import Server
 from models.info import Info
 from utils import Utils
-import mom_database
+from database import Database
 import controllers
 import middlewares
