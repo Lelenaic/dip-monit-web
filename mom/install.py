@@ -1,5 +1,5 @@
-from server import Server
-from info import Info
+from models.server import Server
+from models.info import Info
 from mom_database import db
 import os
 from consts import Consts

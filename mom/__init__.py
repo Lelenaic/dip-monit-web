@@ -1,5 +1,5 @@
-from server import Server
-from info import Info
+from models.server import Server
+from models.info import Info
 from utils import Utils
 import controllers
 import middlewares
