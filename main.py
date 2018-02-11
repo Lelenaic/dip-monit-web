@@ -11,7 +11,7 @@ def hello_world():
 
 @app.route('/create')
 def create():
-    s = mom.Server(ip='127.0.0.1')
+    s = mom.Server(ip='46.105.145.239')
     s.save()
     return s.installKey
 
@@ -22,7 +22,6 @@ def register():
     if key is not None:
         ip = mom.Utils.get_client_ip()
         s = mom.Server.get(mom.Server.installKey == key)
-        return s.ip
         if s.ip == ip and s.installed is False:
             s.installed = True
             s.save()
