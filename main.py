@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request
 import mom
 
 app = Flask(__name__)
@@ -33,6 +33,12 @@ def ping():
     c = mom.controllers.InfoController(request)
     c.store()
     return '', 204
+
+
+@app.route('/info')
+def info():
+    i = mom.Info.select(mom.Server.id == 1).count()
+    return str(i)
 
 
 if __name__ == '__main__':
