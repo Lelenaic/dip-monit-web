@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import mom
 
 app = Flask(__name__)
@@ -26,6 +26,13 @@ def register():
             s.save()
             return s.apiKey
     return ''
+
+
+@app.route('/api/ping', methods=['POST'])
+def ping():
+    c = mom.controllers.InfoController(request)
+    c.store()
+    return '', 204
 
 
 if __name__ == '__main__':
