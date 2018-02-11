@@ -1,5 +1,6 @@
 from mom.server import Server
 from flask import abort
+from mom.utils import Utils
 
 
 class AuthMiddleware:
@@ -10,7 +11,7 @@ class AuthMiddleware:
             abort(401)
         try:
             srv = Server.get(Server.apiKey == api_key)
-            if verify_ip is True and request.remote_addr != srv.ip:
+            if verify_ip is True and Utils.get_client_ip() != srv.ip:
                 abort(401)
             return srv
         except:
