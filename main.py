@@ -20,7 +20,7 @@ def create():
 def register():
     key = request.args.get('key')
     if key is not None:
-        ip = request.headers['X-Forwarded-For']
+        ip = mom.Utils.get_client_ip()
         s = mom.Server.get(mom.Server.installKey == key)
         if s.ip == ip and s.installed is False:
             s.installed = True
