@@ -8,8 +8,8 @@ app = Flask(__name__)
 def hello_world():
     return render_template('index.html')
 
-@app.route('/gabarit/')
-def gabarit():
+@app.route('/blank/')
+def blank():
     return render_template('gabarit.html')
 
 
