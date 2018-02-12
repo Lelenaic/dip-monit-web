@@ -8,7 +8,7 @@ class Info(BaseModel):
     server = ForeignKeyField(Server, backref="emitter")
     memory = TextField()
     disks = TextField()
-    cpu = DecimalField(max_digits=2, decimal_places=2)
+    cpu = DecimalField(max_digits=3, decimal_places=1)
     timestamp = IntegerField()
 
     def __init__(self, *args, **kwargs):
