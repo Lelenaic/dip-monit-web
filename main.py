@@ -8,19 +8,19 @@ app = Flask(__name__)
 def hello_world():
     return render_template('index.html')
 
-@app.route('/blank/')
+@app.route('/blank')
 def blank():
     return render_template('gabarit.html')
 
 
-@app.route('/create/')
+@app.route('/create')
 def create():
     s = mom.Server(ip='127.0.0.1')
     s.save()
     return s.installKey
 
 
-@app.route('/api/register/')
+@app.route('/api/register')
 def register():
     key = request.args.get('key')
     if key is not None:
@@ -33,14 +33,14 @@ def register():
     abort(401)
 
 
-@app.route('/api/ping/', methods=['POST'])
+@app.route('/api/ping', methods=['POST'])
 def ping():
     c = mom.controllers.InfoController(request)
     c.store()
     return '', 204
 
 
-@app.route('/info/')
+@app.route('/info')
 def info():
     i = mom.Info.select(mom.Server.id == 1).count()
     return str(i)
