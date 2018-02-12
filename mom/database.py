@@ -9,7 +9,7 @@ db_type = s.get('database', 'type')
 if db_type == 'sqlite':
     db = SqliteDatabase(Consts.MOM_SQLITE_FILE)
 elif db_type == 'mysql':
-    database_name = s.get('database', 'name')
+    database_name = s.get('database', 'database')
     database_ip = s.get('database', 'host')
     database_username = s.get('database', 'user')
     database_password = s.get('database', 'pass')
@@ -21,6 +21,6 @@ else:
     )
 
 try:
-    db.connect(True)
+    db.connect(reuse_if_open=True)
 except:
     pass

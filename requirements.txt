@@ -4,5 +4,7 @@ itsdangerous==0.24
 Jinja2==2.10
 MarkupSafe==1.0
 peewee==3.0.16
+pycairo==1.16.1
+PyMySQL==0.8.0
 PyYAML==3.12
 Werkzeug==0.14.1
