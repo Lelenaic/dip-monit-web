@@ -9,6 +9,7 @@ app = Flask(__name__)
 def hello_world():
     return render_template('index.html')
 
+
 @app.route('/blank')
 def blank():
     return render_template('gabarit.html')
@@ -46,10 +47,17 @@ def server(server_id=1):
     dataInfo = mom.Info.select().where(mom.Info.server == server_id)
     return render_template('server.html', dataInfo=dataInfo)
 
-@app.route('/servers')
+
+@app.route('/servers', methods=['GET'])
 def index():
     c = mom.controllers.ServerController(request)
     return c.index()
+
+
+@app.route('/servers', methods=['POST'])
+def store():
+    c = mom.controllers.ServerController(request)
+    return c.store()
 
 
 @app.context_processor
@@ -61,6 +69,7 @@ def get_page_name():
 
     server_list = mom.Server.select()
     return dict(page_name=page_name, str_to_json=str_to_json, server_list=server_list)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
