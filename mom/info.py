@@ -9,9 +9,9 @@ class Info(BaseModel):
     memory = TextField()
     disks = TextField()
     cpu = DecimalField(max_digits=3, decimal_places=1)
-    timestamp = IntegerField()
+    tstamp = IntegerField()
 
     def __init__(self, *args, **kwargs):
         super(Info, self).__init__(*args, **kwargs)
-        if not self.timestamp:
-            self.timestamp = int(time.time())
+        if not self.tstamp:
+            self.tstamp = int(time.time())

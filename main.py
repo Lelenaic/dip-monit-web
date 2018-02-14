@@ -16,7 +16,7 @@ def blank():
 
 @app.route('/create')
 def create():
-    s = mom.Server(ip='127.0.0.1')
+    s = mom.Server(ip='127.0.0.1', name='Local Server')
     s.save()
     return s.installKey
 
@@ -50,6 +50,11 @@ def api_server():
 def server(server_id=1):
     dataInfo = mom.Info.select().where(mom.Info.server == server_id)
     return render_template('server_details.html', dataInfo=dataInfo, server_id=server_id)
+
+@app.route('/servers')
+def index():
+    c = mom.controllers.ServerController(request)
+    return c.index()
 
 
 @app.context_processor

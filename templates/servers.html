@@ -1,0 +1,50 @@
+{% extends "page.html" %}
+
+{% block content %}
+    <main class="main">
+        {% include 'breadcrumb.html' %}
+        <div class="container-fluid">
+
+
+            <div class="animated fadeIn">
+                <div class="card">
+                    <div class="card-header">
+                        Monitored servers
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-responsive-sm table-bordered">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>IP</th>
+                                <th>API Key</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for server in server_list %}
+                                <tr>
+                                    <td>{{ server.id }}</td>
+                                    <td>{{ server.name }}</td>
+                                    <td>{{ server.ip }}</td>
+                                    <td>{{ server.get_api_key_start() }}</td>
+                                    <td>
+                                        {% if alive.is_alive(server) %}
+                                            <span class="badge badge-success">Alive</span>
+                                        {% else %}
+                                            <span class="badge badge-danger">Dead</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </main>
+{% endblock %}
