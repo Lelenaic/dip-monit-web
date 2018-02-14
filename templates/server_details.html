@@ -7,12 +7,11 @@
         <div class="container-fluid">
             <div class="animated fadeIn">
 
-                <div class="cols-1">
+                <div class="col-sm-4 col-lg-2">
 
                     <div class="card">
-                        <div class="card-body">
-                            CONTENT
-                            <div id="chart_div" style="width: 400px; height: 120px;"></div>
+                        <div class="card-body p-3 clearfix">
+                            <div id="chart_div"></div>
                         </div>
                     </div>
 
@@ -56,6 +55,7 @@
 
 {% block js %}
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="{{ url_for('static', filename='node_modules/chart.js/dist/Chart.min.js') }}"></script>
     <script>
         // Function to convert bytes to KB, MB, GB, ...
         function formatBytes(a,b){
@@ -78,7 +78,7 @@
             listUsed.push(used[0]);
             var unitUsed = used[1];
 
-            var dateM = {{ data.timestamp }};
+            var dateM = {{ data.tstamp }};
             listDate.push(moment.unix(dateM).format("DD/MM/YYYY HH:mm:ss"));
         {% endfor %}
 
@@ -150,7 +150,7 @@
 
             var data = google.visualization.arrayToDataTable([
                 ['Label', 'Value'],
-                ['CPU', 55]
+                ['CPU', {{ dataLast.cpu }}]
             ]);
 
             var options = {
@@ -167,7 +167,7 @@
             setInterval(function() {
 
                 $.ajax({
-                    url : "{{ url_for('api_server') }}",
+                    url : "{{ url_for('api_servers') }}",
                     type : 'GET',
                     data : 'server_id={{ server_id }}',
                     dataType : 'html',
