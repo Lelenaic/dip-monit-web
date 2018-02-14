@@ -37,6 +37,8 @@
                                     <td>
                                         {% if alive.is_alive(server) == 1 %}
                                             {{ alive.get_uptime(server) }}
+                                        {% else %}
+                                            Error, server offline!
                                         {% endif %}
                                     </td>
                                     <td>
