@@ -23,6 +23,7 @@
                                 <th>Name</th>
                                 <th>IP</th>
                                 <th>Install Key</th>
+                                <th>Uptime</th>
                                 <th>Status</th>
                             </tr>
                             </thead>
@@ -33,6 +34,11 @@
                                     <td>{{ server.name }}</td>
                                     <td>{{ server.ip }}</td>
                                     <td>{{ server.installKey }}</td>
+                                    <td>
+                                        {% if alive.is_alive(server) == 1 %}
+                                            {{ alive.get_uptime(server) }}
+                                        {% endif %}
+                                    </td>
                                     <td>
                                         {% if alive.is_alive(server) == 1 %}
                                             <span class="badge badge-success">Alive</span>

@@ -26,3 +26,7 @@ class InfoRepository:
             return 1
         else:
             return 0
+
+    @staticmethod
+    def get_uptime(server):
+        return Info().select().where(Info.server == server).order_by(Info.id.desc()).get().get_formatted_time()
