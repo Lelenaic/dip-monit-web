@@ -41,21 +41,21 @@ def ping():
     return '', 204
 
 
-@app.route('/serveur/<int:server_id>')
-def serveur(server_id=1):
-    i = mom.Info.select(mom.Server.id == 1).count()
+@app.route('/server/<int:server_id>')
+def server(server_id=1):
     dataInfo = mom.Info.select().where(mom.Info.server == server_id)
-    return render_template('info.html', dataInfo=dataInfo)
+    return render_template('server.html', dataInfo=dataInfo)
 
 
 @app.context_processor
 def get_page_name():
-    print request.path.split('/')
-    page_name = request.path[1:]
+    page_name = request.path.split('/')[1]
 
     def str_to_json(str):
         return json.loads(str)
-    return dict(page_name=page_name, str_to_json=str_to_json)
+
+    server_list = mom.Server.select()
+    return dict(page_name=page_name, str_to_json=str_to_json, server_list=server_list)
 
 if __name__ == '__main__':
     app.run(debug=True)
