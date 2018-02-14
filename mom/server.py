@@ -4,6 +4,7 @@ from utils import Utils
 
 
 class Server(BaseModel):
+    name = CharField(unique=True)
     ip = CharField()
     installKey = CharField(max_length=12)
     apiKey = CharField(max_length=128)
@@ -21,3 +22,6 @@ class Server(BaseModel):
     def _generate_install_key(self):
         if self.installKey is None:
             self.installKey = Utils.generate_random_string(12)
+
+    def get_api_key_start(self):
+        return self.apiKey[0:8] + "xxxxxx"
