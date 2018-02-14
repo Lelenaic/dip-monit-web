@@ -1,6 +1,9 @@
 import random
 import string
 from flask import request
+from datetime import datetime, timedelta
+import time
+import pytz
 
 
 class Utils:
@@ -15,3 +18,13 @@ class Utils:
             return request.remote_addr
         else:
             return forwarded
+
+    @staticmethod
+    def seconds_time_format(sec):
+        now = int(time.time())
+        uptimeSec = now - sec
+        mins, secs = divmod(uptimeSec, 60)
+        hours, mins = divmod(mins, 60)
+        days, hours = divmod(hours, 24)
+        uptime = '%2d days, %02dh %02dm %02ds' % (days, hours, mins, secs)
+        return uptime

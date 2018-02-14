@@ -1,15 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-    {% include 'head.html' %}
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
+    <meta name="author" content="Łukasz Holeczek">
+    <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,AngularJS,Angular,Angular2,Angular 2,Angular4,Angular 4,jQuery,CSS,HTML,RWD,Dashboard,React,React.js,Vue,Vue.js">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.png') }}">
+    <title>CoreUI - Open Source Bootstrap Admin Template</title>
 
-    <body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
-        {% include 'header.html' %}
-        <div class="app-body">
-            {% include 'sidebar.html' %}
-            {% block content %}{% endblock %}
-        </div>
-    </body>
+    <!-- Icons -->
+    <link href="{{ url_for('static', filename='node_modules/flag-icon-css/css/flag-icon.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='node_modules/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='node_modules/simple-line-icons/css/simple-line-icons.css') }}" rel="stylesheet">
 
-    {% include 'footer.html' %}
-    {% include 'script.html' %}
+    <!-- Main styles for this application -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <!-- Styles required by this views -->
+    {% block style %}{% endblock %}
+</head>
+
+
+<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
+{% include 'header.html' %}
+<div class="app-body">
+    {% include 'sidebar.html' %}
+    {% block content %}{% endblock %}
+</div>
+</body>
+
+{% include 'footer.html' %}
+{% include 'script.html' %}
+{% block js %}{% endblock %}
+
 </html>

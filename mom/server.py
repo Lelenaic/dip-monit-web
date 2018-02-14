@@ -4,6 +4,7 @@ from utils import Utils
 
 
 class Server(BaseModel):
+    name = CharField(unique=True)
     ip = CharField()
     installKey = CharField(max_length=12)
     apiKey = CharField(max_length=128)

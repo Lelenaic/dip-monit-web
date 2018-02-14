@@ -1,5 +1,6 @@
 from flask import Flask, request, abort, render_template
 import mom
+import json
 
 app = Flask(__name__)
 
@@ -8,6 +9,7 @@ app = Flask(__name__)
 def hello_world():
     return render_template('index.html')
 
+
 @app.route('/blank')
 def blank():
     return render_template('gabarit.html')
@@ -15,7 +17,7 @@ def blank():
 
 @app.route('/create')
 def create():
-    s = mom.Server(ip='127.0.0.1')
+    s = mom.Server(ip='127.0.0.1', name='Local Server')
     s.save()
     return s.installKey
 
@@ -39,17 +41,40 @@ def ping():
     c.store()
     return '', 204
 
+@app.route('/api/servers', methods=['GET'])
+def api_servers():
+    server_id = request.args.get('server_id')
+    dataInfo = mom.Info.select().where(mom.Info.server == server_id).order_by(mom.Info.id.desc()).get()
+    return str(dataInfo.cpu)
 
-@app.route('/info')
-def info():
-    i = mom.Info.select(mom.Server.id == 1).count()
-    return str(i)
+@app.route('/servers/<int:server_id>')
+def servers(server_id=1):
+    dataInfo = mom.Info.select().where(mom.Info.server == server_id)
+    return render_template('server_details.html', dataInfo=dataInfo, server_id=server_id)
+
+
+@app.route('/servers', methods=['GET'])
+def index():
+    c = mom.controllers.ServerController(request)
+    return c.index()
+
+
+@app.route('/servers', methods=['POST'])
+def store():
+    c = mom.controllers.ServerController(request)
+    return c.store()
 
 
 @app.context_processor
 def get_page_name():
-    page_name = request.path[1:-1]
-    return dict(page_name=page_name)
+    page_name = request.path.split('/')[1]
+
+    def str_to_json(str):
+        return json.loads(str)
+
+    server_list = mom.Server.select()
+    return dict(page_name=page_name, str_to_json=str_to_json, server_list=server_list)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

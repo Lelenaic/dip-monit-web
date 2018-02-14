@@ -1,0 +1,123 @@
+{% extends "page.html" %}
+
+{% block content %}
+    <main class="main">
+        {% include 'breadcrumb.html' %}
+        <div class="container-fluid">
+
+
+            <div class="animated fadeIn">
+                <div class="card">
+                    <div class="card-header">
+                        Monitored servers
+                    </div>
+                    <div class="card-body">
+                        <button class="btn btn-success" style="margin-bottom: 10px;"
+                                data-toggle="modal" data-target="#addServer">
+                            <i class="fa fa-plus"></i> Ajouter
+                        </button>
+                        <table class="table table-responsive-sm table-bordered">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>IP</th>
+                                <th>Install Key</th>
+                                <th>Uptime</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for server in server_list %}
+                                <tr>
+                                    <td>{{ server.id }}</td>
+                                    <td>{{ server.name }}</td>
+                                    <td>{{ server.ip }}</td>
+                                    <td>{{ server.installKey }}</td>
+                                    <td>
+                                        {% if alive.is_alive(server) == 1 %}
+                                            {{ alive.get_uptime(server) }}
+                                        {% else %}
+                                            Error, server offline!
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if alive.is_alive(server) == 1 %}
+                                            <span class="badge badge-success">Alive</span>
+                                        {% elif alive.is_alive(server) == 2 %}
+                                            <span class="badge badge-info">Waiting for installation</span>
+                                        {% else %}
+                                            <span class="badge badge-danger">Dead</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+{% block js %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#addServerForm').submit(function (e) {
+                e.preventDefault();
+                $('div#error').hide();
+                var dataflow = $(this).serialize();
+                $.post('servers', dataflow, function (data) {
+                    if (data.success === true) {
+                        $('#saveButton').prop('disabled', true).hide();
+                        $('#installKey').text(data.key);
+                        $('div#step2').show();
+                    } else {
+                        $('div#error').show();
+                    }
+                });
+            });
+        });
+    </script>
+    <div class="modal fade" id="addServer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Adding server</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form id="addServerForm">
+                    <div class="modal-body">
+                        <div class="alert alert-danger text-center" role="alert" id="error" style="display: none">
+                            <i class="fa fa-times fa-2x"></i><br>
+                            Error, please verify the given server name is unique.
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Unique name:</label>
+                            <input type="text" placeholder="VMWare Server 1" id="name" name="name" class="form-control"
+                                   required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ip">IP Address (without CIDR):</label>
+                            <input type="text" placeholder="1.2.3.4"
+                                   id="ip" name="ip" class="form-control" required>
+                        </div>
+                        <div class="alert alert-info text-center" role="alert" id="step2" style="display: none">
+                            <i class="fa fa-info-circle fa-2x"></i><br>
+                            Please execute this command as Root user to install Mom agent automatically:<br>
+                            <code>cd /tmp && wget -q https://cdn.monit.dip.lenaic.me/mom-agent.sh && bash mom-agent.sh
+                                <span id="installKey"></span></code>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button id="saveButton" type="submit" class="btn btn-info">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -10,5 +10,5 @@ class InfoController:
 
     def store(self):
         data = loads(self._r.form['info'])
-        info = Info(server=self._srv, memory=dumps(data['memory']), disks=dumps(data['disks']), cpu=data['cpu'])
+        info = Info(server=self._srv, memory=dumps(data['memory']), disks=dumps(data['disks']), cpu=data['cpu'], uptime=data['uptime'])
         info.save()
