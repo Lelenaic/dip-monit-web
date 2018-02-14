@@ -2,19 +2,19 @@
     <nav class="sidebar-nav">
         <ul class="nav">
             <li class="nav-item">
-                <a class="nav-link" href="index.html"><i class="icon-speedometer"></i> Dashboard <span class="badge badge-primary">NEW</span></a>
+                <a href="{{ url_for('index') }}" class="nav-link"><i class="fa fa-server"></i> Servers</a>
             </li>
 
-            <li class="nav-title">
-                Servers
-            </li>
+{#            <li class="nav-title">#}
+{#                Servers#}
+{#            </li>#}
 
             <li class="nav-item nav-dropdown">
-                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-server"></i> Servers</a>
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-server"></i> Information</a>
                 <ul class="nav-dropdown-items">
                 {% for server in server_list %}
                     <li class="nav-item">
-                        <a href="{{ url_for('server', server_id=server.id) }}" class="nav-link"><i class="fa fa-circle-o"></i> {{ server.ip }}</a>
+                        <a href="{{ url_for('servers', server_id=server.id) }}" class="nav-link"><i class="fa fa-circle-o"></i> {{ server.name }}</a>
                     </li>
                 {% endfor %}
                 </ul>

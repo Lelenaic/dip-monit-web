@@ -41,11 +41,16 @@ def ping():
     c.store()
     return '', 204
 
+@app.route('/api/servers', methods=['GET'])
+def api_servers():
+    server_id = request.args.get('server_id')
+    dataInfo = mom.Info.select().where(mom.Info.server == server_id).order_by(mom.Info.id.desc()).get()
+    return str(dataInfo.cpu)
 
-@app.route('/server/<int:server_id>')
-def server(server_id=1):
+@app.route('/servers/<int:server_id>')
+def servers(server_id=1):
     dataInfo = mom.Info.select().where(mom.Info.server == server_id)
-    return render_template('server.html', dataInfo=dataInfo)
+    return render_template('server_details.html', dataInfo=dataInfo, server_id=server_id)
 
 
 @app.route('/servers', methods=['GET'])
