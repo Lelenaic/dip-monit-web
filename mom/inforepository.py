@@ -16,9 +16,17 @@ class InfoRepository:
         """
         If the last server ping is more than 10 minutes ago, considering it as dead.
         """
+        if server.installed is False:
+            return 2
         last_info = InfoRepository.get_last_timestamp_from_server(server)
         if last_info is None:
-            return False
-        print last_info
+            return 0
         now = int(time.time())
-        return now - last_info < 600
+        if now - last_info < 600:
+            return 1
+        else:
+            return 0
+
+    @staticmethod
+    def get_uptime(server):
+        return Info().select().where(Info.server == server).order_by(Info.id.desc()).get().get_formatted_time()

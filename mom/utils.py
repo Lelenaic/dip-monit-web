@@ -1,6 +1,7 @@
 import random
 import string
 from flask import request
+import datetime
 
 
 class Utils:
@@ -15,3 +16,8 @@ class Utils:
             return request.remote_addr
         else:
             return forwarded
+
+    @staticmethod
+    def seconds_time_format(sec):
+        ''' @TODO Format the number of seconds in 'sec' to auto format with days hours minutes (no seconds) '''
+        return sec
