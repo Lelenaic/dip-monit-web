@@ -10,11 +10,11 @@
 {#            </li>#}
 
             <li class="nav-item nav-dropdown">
-                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-server"></i> Information</a>
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-info-circle"></i> Information</a>
                 <ul class="nav-dropdown-items">
                 {% for server in server_list %}
                     <li class="nav-item">
-                        <a href="{{ url_for('servers', server_id=server.id) }}" class="nav-link"><i class="fa fa-circle-o"></i> {{ server.name }}</a>
+                        <a href="{{ url_for('servers', server_id=server.id) }}" class="nav-link"><i></i> {{ server.name }}</a>
                     </li>
                 {% endfor %}
                 </ul>
