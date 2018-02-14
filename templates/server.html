@@ -90,7 +90,7 @@
                     data : listTotal
                 },
                 {
-                    label: 'Utilisé ('+unitUsed+')',
+                    label: 'Used ('+unitUsed+')',
                     backgroundColor : 'rgba(151,187,205,0.2)',
                     borderColor : 'rgba(151,187,205,1)',
                     pointBackgroundColor : 'rgba(151,187,205,1)',
@@ -114,8 +114,8 @@
             console.log("{{ item|safe }}");
             var pieData = {
                 labels: [
-                    'Utilisé ('+formatBytes({{ item.used|safe }},3)[1]+')',
-                    'Libre ('+formatBytes({{ item.total|safe }}-{{ item.used|safe }},3)[1]+')'
+                    'Used ('+formatBytes({{ item.used|safe }},3)[1]+')',
+                    'Free ('+formatBytes({{ item.total|safe }}-{{ item.used|safe }},3)[1]+')'
                 ],
                 datasets: [{
                     data: [formatBytes({{ item.used|safe }},3)[0], formatBytes({{ item.total|safe }}-{{ item.used|safe }},3)[0]],
