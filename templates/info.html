@@ -1,10 +1,143 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <p>{{ i }}</p>abc
-</body>
-</html>
+{% extends "page.html" %}
+
+{% block content %}
+
+    <main class="main">
+        {% include 'breadcrumb.html' %}
+        <div class="container-fluid">
+
+
+            <div class="animated fadeIn">
+                <div class="card">
+                    <div class="card-header">
+                        TITRE
+                    </div>
+                    <div class="card-body">
+                        CONTENT
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        Mémoire
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-wrapper">
+                            <canvas id="canvas-5"></canvas>
+                        </div>
+                    </div>
+                </div>
+                {% set dataLast = dataInfo|last %}
+                <ul class="nav nav-tabs" role="tablist">
+                    {% for item in str_to_json(dataLast.disks) %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if loop.index == 1 %}active{% endif %}" data-toggle="tab" href="#disks-{{ loop.index }}" role="tab" aria-controls="home">{{ item }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                <div class="tab-content">
+                    {% for item in str_to_json(dataLast.disks) %}
+                        <div class="tab-pane {% if loop.index == 1 %}active{% endif %}" id="disks-{{ loop.index }}" role="tabpanel">
+                            <canvas id="piechart-{{ loop.index }}"></canvas>
+                        </div>
+                    {% endfor %}
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </main>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        function formatBytes(a,b){
+            if(0==a)return"0 Bytes";
+            var c=1024,d=b||2,f=Math.floor(Math.log(a)/Math.log(c)),e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"];
+            return [parseFloat((a/Math.pow(c,f)).toFixed(d)), e[f]];
+        }
+
+        var listTotal = [];
+        var listUsed = [];
+        var listDate = [];
+        {% for data in dataInfo %}
+            var memory = {{ data.memory|safe }};
+            var total = formatBytes(memory.total, 3);
+            listTotal.push(total[0]);
+            var unitTotal = total[1];
+
+            var used = formatBytes(memory.used, 3);
+            listUsed.push(used[0]);
+            var unitUsed = used[1];
+
+            var dateM = {{ data.timestamp }};
+            listDate.push(moment.unix(dateM).format("DD/MM/YYYY HH:mm:ss"));
+        {% endfor %}
+
+        var lineChartData = {
+            labels : listDate,
+            datasets : [
+                {
+                    label: 'Total ('+unitTotal+')',
+                    backgroundColor : 'rgba(220,220,220,0.2)',
+                    borderColor : 'rgba(220,220,220,1)',
+                    pointBackgroundColor : 'rgba(220,220,220,1)',
+                    pointBorderColor : '#fff',
+                    data : listTotal
+                },
+                {
+                    label: 'Utilisé ('+unitUsed+')',
+                    backgroundColor : 'rgba(151,187,205,0.2)',
+                    borderColor : 'rgba(151,187,205,1)',
+                    pointBackgroundColor : 'rgba(151,187,205,1)',
+                    pointBorderColor : '#fff',
+                    data : listUsed
+                }
+            ]
+        };
+
+        var ctx = document.getElementById('canvas-5');
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: lineChartData,
+            options: {
+                responsive: true
+            }
+        });
+
+        {% set dataLast = dataInfo|last %}
+        {% for item in str_to_json(dataLast.disks).values() %}
+            console.log("{{ item|safe }}");
+            var pieData = {
+                labels: [
+                    'Utilisé ('+formatBytes({{ item.used|safe }},3)[1]+')',
+                    'Libre ('+formatBytes({{ item.total|safe }}-{{ item.used|safe }},3)[1]+')'
+                ],
+                datasets: [{
+                    data: [formatBytes({{ item.used|safe }},3)[0], formatBytes({{ item.total|safe }}-{{ item.used|safe }},3)[0]],
+                    backgroundColor: [
+                        '#FF6384',
+                        '#5deb77'
+                    ],
+                    hoverBackgroundColor: [
+                        '#FF6384',
+                        '#5deb77'
+                    ]
+                }]
+            };
+            var ctx = document.getElementById('piechart-{{ loop.index }}');
+            var chart = new Chart(ctx, {
+                type: 'pie',
+                data: pieData,
+                options: {
+                    responsive: true
+                }
+            });
+        {% endfor %}
+
+    </script>
+{% endblock %}

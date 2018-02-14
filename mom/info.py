@@ -13,4 +13,5 @@ class Info(BaseModel):
 
     def __init__(self, *args, **kwargs):
         super(Info, self).__init__(*args, **kwargs)
-        self.timestamp = int(time.time())
+        if not self.timestamp:
+            self.timestamp = int(time.time())
