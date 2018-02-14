@@ -21,7 +21,6 @@ class InfoRepository:
         last_info = InfoRepository.get_last_timestamp_from_server(server)
         if last_info is None:
             return 0
-        print last_info
         now = int(time.time())
         if now - last_info < 600:
             return 1
