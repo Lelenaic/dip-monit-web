@@ -79,7 +79,7 @@
             var unitUsed = used[1];
 
             var dateM = {{ data.tstamp }};
-            listDate.push(moment.unix(dateM).format("DD/MM/YYYY HH:mm:ss"));
+            listDate.push(moment.unix(dateM).format("YYYY-MM-DD HH:mm"));
         {% endfor %}
 
         var lineChartData = {
