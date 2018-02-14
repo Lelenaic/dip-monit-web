@@ -9,6 +9,7 @@ class Info(BaseModel):
     server = ForeignKeyField(Server, backref="emitter")
     memory = TextField()
     disks = TextField()
+    process = TextField()
     cpu = DecimalField(max_digits=3, decimal_places=1)
     uptime = IntegerField()
     tstamp = IntegerField()
