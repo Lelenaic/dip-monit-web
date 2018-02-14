@@ -10,7 +10,6 @@ itsdangerous==0.24
 Jinja2==2.10
 MarkupSafe==1.0
 peewee==3.0.16
-psutil==5.4.3
 py==1.4.34
 PyMySQL==0.8.0
 pytz==2018.3
