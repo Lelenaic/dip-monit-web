@@ -18,6 +18,10 @@
                             <li class="list-group-item">
                                 <code>
                                     cd /tmp && wget -q https://cdn.monit.dip.lenaic.me/mom-agent.sh && bash mom-agent.sh {{ install_key }}
+                                    <button class="btn btn-outline-gray-300" type="button" id="copyInstallCommand"
+                                            data-clipboard-text="cd /tmp && wget -q https://cdn.monit.dip.lenaic.me/mom-agent.sh && bash mom-agent.sh {{ install_key }}">
+                                        <i class="fa fa-copy"></i>
+                                    </button>
                                 </code>
                             </li>
                         </ul>
@@ -28,4 +32,10 @@
 
         </div>
     </main>
+{% endblock %}
+
+{% block js %}
+<script>
+    new Clipboard('#copyInstallCommand');
+</script>
 {% endblock %}

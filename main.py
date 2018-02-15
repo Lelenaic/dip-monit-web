@@ -60,7 +60,7 @@ def servers(server_id=1):
     server_installed = mom.Server.select().where(mom.Server.id == server_id).where(mom.Server.installed == 1)
     if len(server_installed) == 0:
         error = 'The server you are looking for is <strong>not installed</strong> yet.'
-        return render_template('error.html', error=error, code=400, install_key=server[0].installKey) # Server is not installed
+        return render_template('error.html', error=error, code=422, install_key=server[0].installKey) # Server is not installed
 
     dataInfo = mom.Info.select().where(mom.Info.server == server_id)
     return render_template('server_details.html', dataInfo=dataInfo, server_id=server_id)
