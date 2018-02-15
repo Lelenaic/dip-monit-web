@@ -19,9 +19,12 @@
                                 <code>
                                     cd /tmp && wget -q https://cdn.monit.dip.lenaic.me/mom-agent.sh && bash mom-agent.sh {{ install_key }}
                                     <button class="btn btn-outline-gray-300" type="button" id="copyInstallCommand"
-                                            data-clipboard-text="cd /tmp && wget -q https://cdn.monit.dip.lenaic.me/mom-agent.sh && bash mom-agent.sh {{ install_key }}">
-                                        <i class="fa fa-copy"></i>
-                                    </button>
+                                                data-toggle="tooltip"
+                                                title="Copy install command"
+                                                data-placement="bottom"
+                                                data-clipboard-text="cd /tmp && wget -q https://cdn.monit.dip.lenaic.me/mom-agent.sh && bash mom-agent.sh {{ install_key }}">
+                                            <i class="fa fa-copy"></i>
+                                        </button>
                                 </code>
                             </li>
                         </ul>
@@ -36,6 +39,27 @@
 
 {% block js %}
 <script>
-    new Clipboard('#copyInstallCommand');
+    $(document).ready(function () {
+        $('#copyInstallCommand').tooltip().mouseleave(function () {
+            $(this)
+                .attr('data-original-title', "Copy install command");
+        });
+
+        var clipboard = new Clipboard('#copyInstallCommand');
+
+        clipboard.on('success', function (e) {
+            setTooltip('Copied!');
+        });
+
+        clipboard.on('error', function (e) {
+            setTooltip('Failed!');
+            e.clearSelection();
+        });
+
+        function setTooltip(message) {
+            $('#copyInstallCommand').tooltip('hide')
+                .attr('data-original-title', message).tooltip('show');
+        }
+    });
 </script>
 {% endblock %}
