@@ -33,7 +33,13 @@
                                     <td>{{ server.id }}</td>
                                     <td>{{ server.name }}</td>
                                     <td>{{ server.ip }}</td>
-                                    <td>{{ server.installKey }}</td>
+                                    <td>
+                                        {{ server.installKey }}
+                                        <button class="btn btn-outline-gray-300" type="button" id="copyInstallCommand"
+                                                data-clipboard-text="cd /tmp && wget -q https://cdn.monit.dip.lenaic.me/mom-agent.sh && bash mom-agent.sh {{ server.installKey }}">
+                                            <i class="fa fa-copy"></i>
+                                        </button>
+                                    </td>
                                     <td>
                                         {% if alive.is_alive(server) == 1 %}
                                             {{ alive.get_uptime(server) }}
@@ -63,6 +69,8 @@
 {% block js %}
     <script type="text/javascript">
         $(document).ready(function () {
+            new Clipboard('#copyInstallCommand');
+
             $('#addServerForm').submit(function (e) {
                 e.preventDefault();
                 $('div#error').hide();
