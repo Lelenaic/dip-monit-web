@@ -5,9 +5,11 @@ import json
 app = Flask(__name__)
 
 
-@app.route('/')
-def hello_world():
-    return render_template('index.html')
+@app.route('/', methods=['GET'])
+def index():
+    c = mom.controllers.ServerController(request)
+    return c.index()
+
 
 
 @app.route('/blank')
@@ -49,15 +51,17 @@ def api_servers():
 
 @app.route('/servers/<int:server_id>')
 def servers(server_id=1):
+    server = mom.Server.select().where(mom.Server.id == server_id)
+    if len(server) == 0:
+        error = 'The server you are looking for was <strong>not found</strong>.'
+        return render_template('error.html', error=error, code=404, install_key=None) # No server with this ID
+    server_installed = mom.Server.select().where(mom.Server.id == server_id).where(mom.Server.installed == 1)
+    if len(server_installed) == 0:
+        error = 'The server you are looking for is <strong>not installed</strong> yet.'
+        return render_template('error.html', error=error, code=400, install_key=server[0].installKey) # Server is not installed
+
     dataInfo = mom.Info.select().where(mom.Info.server == server_id)
     return render_template('server_details.html', dataInfo=dataInfo, server_id=server_id)
-
-
-@app.route('/servers', methods=['GET'])
-def index():
-    c = mom.controllers.ServerController(request)
-    return c.index()
-
 
 @app.route('/servers', methods=['POST'])
 def store():
