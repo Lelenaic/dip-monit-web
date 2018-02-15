@@ -29,7 +29,10 @@ def register():
     key = request.args.get('key')
     if key is not None:
         ip = mom.Utils.get_client_ip()
-        s = mom.Server.get(mom.Server.installKey == key)
+        try:
+            s = mom.Server.get(mom.Server.installKey == key)
+        except:
+            abort(401)
         if s.ip == ip and s.installed is False:
             s.installed = True
             s.save()
