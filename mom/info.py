@@ -10,6 +10,7 @@ class Info(BaseModel):
     memory = TextField()
     disks = TextField()
     process = TextField()
+    network = TextField()
     cpu = DecimalField(max_digits=3, decimal_places=1)
     uptime = IntegerField()
     tstamp = IntegerField()

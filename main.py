@@ -1,3 +1,4 @@
+import operator
 from flask import Flask, request, abort, render_template
 import mom
 import json
@@ -48,7 +49,9 @@ def ping():
 def api_servers():
     server_id = request.args.get('server_id')
     dataInfo = mom.Info.select().where(mom.Info.server == server_id).order_by(mom.Info.id.desc()).get()
-    return str(dataInfo.cpu)
+    memory = json.loads(dataInfo.memory)
+    memory_percent = round(memory['used'],2) * 100 / round(memory['total'],2)
+    return '{"cpu":%f,"memory":%f}' % (dataInfo.cpu, memory_percent)
 
 
 @app.route('/servers/<int:server_id>')
@@ -78,8 +81,14 @@ def get_page_name():
     def str_to_json(str):
         return json.loads(str)
 
+    def sorted_dict(dict):
+        return sorted(str_to_json(dict).items(), key=operator.itemgetter(1), reverse=True)
+
+    def round_float(float):
+        return round(float, 2)
+
     server_list = mom.Server.select()
-    return dict(page_name=page_name, str_to_json=str_to_json, server_list=server_list)
+    return dict(page_name=page_name, str_to_json=str_to_json, server_list=server_list, sorted_dict=sorted_dict, round_float=round_float)
 
 
 if __name__ == '__main__':

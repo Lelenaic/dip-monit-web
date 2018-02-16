@@ -8,42 +8,81 @@
             <div class="animated fadeIn">
 
                 {% if dataInfo %}
-                <div class="col-sm-4 col-lg-2">
-
-                    <div class="card">
-                        <div class="card-body p-3 clearfix">
-                            <div id="chart_div"></div>
-                        </div>
-                    </div>
-
-                </div>
                 <div class="card-columns cols-2">
 
                     <div class="card">
+                        <div class="card-body p-3 clearfix">
+                            <div id="cpu_chart"></div>
+                            <div id="download_chart"></div>
+                            <div id="upload_chart"></div>
+                        </div>
+                    </div>
+
+
+                    <div class="card">
                         <div class="card-header">
-                            Mémoire
+                            Memory
                         </div>
                         <div class="card-body">
                             <div class="chart-wrapper">
-                                <canvas id="line_chart"></canvas>
+                                <canvas id="line_chart_memory"></canvas>
                             </div>
                         </div>
                     </div>
-                    {% set dataLast = dataInfo|last %}
-                    <ul class="nav nav-tabs" role="tablist">
-                        {% for item in str_to_json(dataLast.disks) %}
-                            <li class="nav-item">
-                                <a class="nav-link {% if loop.index == 1 %}active{% endif %}" data-toggle="tab" href="#disks-{{ loop.index }}" role="tab" aria-controls="home">{{ item }}</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
 
-                    <div class="tab-content">
-                        {% for item in str_to_json(dataLast.disks) %}
-                            <div class="tab-pane {% if loop.index == 1 %}active{% endif %}" id="disks-{{ loop.index }}" role="tabpanel">
-                                <canvas id="piechart-{{ loop.index }}"></canvas>
+                    {% set dataLast = dataInfo|last %}
+                    <div class="card">
+                        <ul class="nav nav-tabs" role="tablist">
+                            {% for item in str_to_json(dataLast.disks) %}
+                                <li class="nav-item">
+                                    <a class="nav-link {% if loop.index == 1 %}active{% endif %}" data-toggle="tab" href="#disks-{{ loop.index }}" role="tab" aria-controls="home">{{ item }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+
+                        <div class="tab-content">
+                            {% for item in str_to_json(dataLast.disks) %}
+                                <div class="tab-pane {% if loop.index == 1 %}active{% endif %}" id="disks-{{ loop.index }}" role="tabpanel">
+                                    <canvas id="piechart-{{ loop.index }}"></canvas>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fa fa-align-justify"></i> 10 main processes
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-responsive-sm">
+                                <thead>
+                                <tr>
+                                    <th>Process</th>
+                                    <th>Percentage</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+{#                                {% set process_list = str_to_json(dataLast.process).sort(key=extract_time, reverse=True) %}#}
+                                {% for name, percentage in sorted_dict(dataLast.process) %}
+                                <tr>
+                                    <td>{{ name }}</td>
+                                    <td>{{ round_float(percentage) }} %</td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            Network
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-wrapper">
+                                <canvas id="line_chart_network"></canvas>
                             </div>
-                        {% endfor %}
+                        </div>
                     </div>
 
                 </div>
@@ -61,6 +100,7 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="{{ url_for('static', filename='node_modules/chart.js/dist/Chart.min.js') }}"></script>
     {% if dataInfo %}
+    {% endif %}
     <script>
         // Function to convert bytes to KB, MB, GB, ...
         function formatBytes(a,b){
@@ -69,7 +109,7 @@
             return [parseFloat((a/Math.pow(c,f)).toFixed(d)), e[f]];
         }
 
-        // Set the line chart
+        // Set the line chart memory
         var listTotal = [];
         var listUsed = [];
         var listDate = [];
@@ -108,7 +148,63 @@
                 }
             ]
         };
-        var ctx = document.getElementById('line_chart');
+        var ctx = document.getElementById('line_chart_memory');
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: lineChartData,
+            options: {
+                responsive: true
+            }
+        });
+
+        // Set the line chart network
+        var listUpload = [];
+        var listDownload = [];
+        var listDate = [];
+        {% for data in dataInfo %}
+            {% if data.network %}
+            var network = {{ data.network|safe }};
+            var upload = formatBytes(network.upload, 3);
+            listUpload.push(upload[0]);
+            var unitUpload = upload[1];
+
+            var download = formatBytes(network.download, 3);
+            listDownload.push(download[0]);
+            var unitDownload = download[1];
+            {% else %}
+            listUpload.push(0);
+            var unitUpload = '';
+
+            listDownload.push(0);
+            var unitDownload = '';
+            {% endif %}
+
+            var dateM = {{ data.tstamp }};
+            listDate.push(moment.unix(dateM).format("YYYY-MM-DD HH:mm"));
+        {% endfor %}
+
+        var lineChartData = {
+            labels : listDate,
+            datasets : [
+                {
+                    label: 'Upload ('+unitUpload+')',
+                    backgroundColor : 'rgba(220,220,220,0.2)',
+                    borderColor : 'rgba(220,220,220,1)',
+                    pointBackgroundColor : 'rgba(220,220,220,1)',
+                    pointBorderColor : '#fff',
+                    data : listUpload
+                },
+                {
+                    label: 'Download ('+unitDownload+')',
+                    backgroundColor : 'rgba(151,187,205,0.2)',
+                    borderColor : 'rgba(151,187,205,1)',
+                    pointBackgroundColor : 'rgba(151,187,205,1)',
+                    pointBorderColor : '#fff',
+                    data : listDownload
+                }
+            ]
+        };
+        var ctx = document.getElementById('line_chart_network');
         var chart = new Chart(ctx, {
             type: 'line',
             data: lineChartData,
@@ -152,10 +248,12 @@
         google.charts.setOnLoadCallback(drawChart);
 
         function drawChart() {
-
+            {% set memory = str_to_json(dataLast.memory) %}
+            {% set memory_percentage = round_float(memory.used) * 100 / round_float(memory.total) %}
             var data = google.visualization.arrayToDataTable([
                 ['Label', 'Value'],
-                ['CPU', {{ dataLast.cpu }}]
+                ['CPU', {{ dataLast.cpu }}],
+                ['Memory', {{ memory_percentage }}]
             ]);
 
             var options = {
@@ -165,7 +263,7 @@
                 minorTicks: 5
             };
 
-            var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+            var chart = new google.visualization.Gauge(document.getElementById('cpu_chart'));
 
             chart.draw(data, options);
 
@@ -177,7 +275,9 @@
                     data : 'server_id={{ server_id }}',
                     dataType : 'html',
                     success: function(response) {
-                        data.setValue(0, 1, parseFloat(response));
+                        var dict = $.parseJSON(response);
+                        data.setValue(0, 1, parseFloat(dict.cpu));
+                        data.setValue(1, 1, parseFloat(dict.memory));
                         chart.draw(data, options);
                     },
                     error: function(response) {
@@ -189,5 +289,4 @@
         }
 
     </script>
-    {% endif %}
 {% endblock %}
