@@ -100,7 +100,6 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="{{ url_for('static', filename='node_modules/chart.js/dist/Chart.min.js') }}"></script>
     {% if dataInfo %}
-    {% endif %}
     <script>
         // Function to convert bytes to KB, MB, GB, ...
         function formatBytes(a,b){
@@ -289,4 +288,5 @@
         }
 
     </script>
+    {% endif %}
 {% endblock %}
